@@ -1,9 +1,9 @@
 # PG BootCamp Russia 2023
 
-**Доклад**: `Билдь или не билдь...Или Как достойно собрать PostgreSQL из исходников``
-**Краткая аннотация**: Мастер-класс про то как собрать postgresql из исходников и  протестировать собранное. Как работать с патчами к коду postgres. И зачем это все может быть нужно обычному айтишнику.
-**Спикер**: Вадим Пономарев, Tantor Labs, ГК «Астра» (https://t.me/vbponomarev)
-**Презентация**: [ссылка|https://docs.google.com/presentation/d/1Y8reNmlylI9s2TvBDErEwdWkel9LDhfq/edit?usp=sharing&ouid=110533282330244212380&rtpof=true&sd=true]
+**Доклад**: `Билдь или не билдь...Или Как достойно собрать PostgreSQL из исходников`\
+**Краткая аннотация**: Мастер-класс про то как собрать postgresql из исходников и  протестировать собранное. Как работать с патчами к коду postgres. И зачем это все может быть нужно обычному айтишнику.\
+**Спикер**: Вадим Пономарев, Tantor Labs, ГК «Астра» (https://t.me/vbponomarev)<br>
+**Презентация**: [ссылка](https://docs.google.com/presentation/d/1Y8reNmlylI9s2TvBDErEwdWkel9LDhfq/edit?usp=sharing&ouid=110533282330244212380&rtpof=true&sd=true)<br>
 
 ## Tutorial
 Сборка только под Linux и на Linux, конкретно в примерах - Ubuntu 22.04 на WSL. Но лучше, конечно, в контейнере.
@@ -39,7 +39,6 @@ sudo cpanm TAP::Harness::Archive TAP::Parser::SourceHandler::pgTAP IPC::Run
  - загрузка исходных кодов:
 ```
 git clone https://github.com/postgres/postgres 
-(git clone --branch master --single-branch https://github.com/postgres/postgres)
 cd postgres
 git status
 git branch --all
@@ -54,7 +53,8 @@ export LLVM_CONFIG=/usr/bin/llvm-config-11
 export CLANG=/usr/bin/clang-11
 export WORKSPACE_PATH=/home/vponomarev
 
-./configure --prefix=$WORKSPACE_PATH/postgres_bin --enable-debug --with-python --with-llvm --with-lz4 --with-zstd --with-ssl=openssl --enable-nls='ru' CFLAGS='-O2 -pipe' --enable-tap-tests
+./configure --prefix=$WORKSPACE_PATH/postgres_bin --enable-debug --with-python\
+	--with-llvm --with-lz4 --with-zstd --with-ssl=openssl --enable-nls='ru' CFLAGS='-O2 -pipe' --enable-tap-tests
 make world-bin -j $(nproc)
 ```
  - гоняем тесты
@@ -94,7 +94,8 @@ less ./src/test/recovery/tmp_check/log/regress_log*
 ## Дебаг и применение патчей
  - провоцируем stack overflow, исследуем coredump
 ```
-(n=1000000; printf "BEGIN;"; for ((i=1;i<=$n;i++)); do printf "SAVEPOINT s$i;"; done; printf "SELECT pg_log_backend_memory_contexts(pg_backend_pid())") | psql postgres > /dev/null
+(n=1000000; printf "BEGIN;"; for ((i=1;i<=$n;i++)); do printf "SAVEPOINT s$i;"; done;\
+	printf "SELECT pg_log_backend_memory_contexts(pg_backend_pid())") | psql postgres > /dev/null
 
 gdb "$WORKSPACE_PATH/postgres_bin/bin/postgres" /var/crash/core-postgres-* --ex 'bt full' --batch | less
 
@@ -111,9 +112,11 @@ git apply -v ./v1-0001-Add-some-checks-to-avoid-stack-overflow.patch
 ...
  - собираем, ставим, тестируем:
 ```
-./configure --prefix=$WORKSPACE_PATH/postgres_bin --enable-debug --with-python --with-llvm --with-lz4 --with-zstd --with-ssl=openssl --enable-nls='ru' CFLAGS='-O2 -pipe'
+./configure --prefix=$WORKSPACE_PATH/postgres_bin --enable-debug --with-python\
+	--with-llvm --with-lz4 --with-zstd --with-ssl=openssl --enable-nls='ru' CFLAGS='-O2 -pipe'
 make world-bin -j $(nproc)
 make install-world-bin
 pg_ctl -D $PGDATA start
-(n=1000000; printf "BEGIN;"; for ((i=1;i<=$n;i++)); do printf "SAVEPOINT s$i;"; done; printf "SELECT pg_log_backend_memory_contexts(pg_backend_pid())") | psql postgres > /dev/null
+(n=1000000; printf "BEGIN;"; for ((i=1;i<=$n;i++)); do printf "SAVEPOINT s$i;"; done;\
+	printf "SELECT pg_log_backend_memory_contexts(pg_backend_pid())") | psql postgres > /dev/null
 ```
