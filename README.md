@@ -5,7 +5,7 @@
 **Спикер**: Вадим Пономарев, Tantor Labs, ГК «Астра» (https://t.me/vbponomarev)<br>
 **Презентация**: [ссылка](https://docs.google.com/presentation/d/1Y8reNmlylI9s2TvBDErEwdWkel9LDhfq/edit?usp=sharing&ouid=110533282330244212380&rtpof=true&sd=true)<br>
 
-## Tutorial
+# Tutorial
 Сборка только под Linux и на Linux, конкретно в примерах - Ubuntu 22.04 на WSL и AstraLinux 1.7 в docker. Но лучше, конечно, в контейнере.
 
 ## Запуск стенда
