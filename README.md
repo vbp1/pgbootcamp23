@@ -6,13 +6,14 @@
 **Презентация**: [ссылка](https://docs.google.com/presentation/d/1Y8reNmlylI9s2TvBDErEwdWkel9LDhfq/edit?usp=sharing&ouid=110533282330244212380&rtpof=true&sd=true)<br>
 
 ## Tutorial
-Сборка только под Linux и на Linux, конкретно в примерах - Ubuntu 22.04 на WSL. Но лучше, конечно, в контейнере.
+Сборка только под Linux и на Linux, конкретно в примерах - Ubuntu 22.04 на WSL и AstraLinux 1.7 в docker. Но лучше, конечно, в контейнере.
 
 ## Запуск стенда
- - на windows, в WSL: `wsl --install -d Ubuntu-22.04`
- - в docker: `sudo docker run --rm -it ubuntu:22.04 bash`
+ - Ubuntu 22.04 на windows, в WSL: `wsl --install -d Ubuntu-22.04`
+ - Ubuntu 22.04 в docker: `sudo docker run --rm -it ubuntu:22.04 bash`
+ - ALSE 1.7 в docker: `sudo docker run --rm -it registry.astralinux.ru/library/alse:1.7.4 bash`
 
-# Подготовка
+## Подготовка (Ubuntu 22.04)
  - ставим dev-пакеты и зависимости
 ```
 export DEBIAN_FRONTEND=noninteractive
@@ -35,6 +36,40 @@ sudo apt-get install -y \
  - опционально, если будем использовать TAP-тесты:
 ```
 sudo cpanm TAP::Harness::Archive TAP::Parser::SourceHandler::pgTAP IPC::Run
+```
+ - загрузка исходных кодов:
+```
+git clone https://github.com/postgres/postgres 
+cd postgres
+git status
+git branch --all
+```
+
+## Подготовка (ALSE 1.7)
+ВНИМАНИЕ! Надеюсь, вы понимаете, что собранный таким образом Postgres не будет иметь поддержки мандатного доступа, т.е. ставить его имеет смысл только на вариант дистрибутива ALSE Орел. 
+ - ставим dev-пакеты и зависимости
+```
+export DEBIAN_FRONTEND=noninteractive
+apt-get update
+apt-get install -y \
+    jq git tree nano wget python3-minimal systemd vim procps \
+    build-essential slapd ldap-utils libldap2-dev \
+    autoconf bison clang-11 devscripts dpkg-dev flex \
+    libldap2-dev libdbi-perl libgssapi-krb5-2 libicu-dev \
+    krb5-kdc krb5-admin-server libssl-dev libpam0g-dev \
+    libkrb5-dev krb5-user libcurl4-openssl-dev \
+    perl perl-modules libipc-run-perl libtest-simple-perl libtime-hires-perl \
+    liblz4-dev libpam-dev libreadline-dev libselinux1-dev libsystemd-dev \
+    libxml2-dev libxslt-dev libzstd-dev llvm-11-dev locales-all pkg-config \
+    python3-dev uuid-dev zlib1g-dev \
+    openjade docbook-xml docbook-xsl opensp libxml2-utils xsltproc \
+    libjson-perl curl time
+```
+
+ - опционально, если будем использовать TAP-тесты:
+```
+apt-get install libmodule-install-perl
+cpan TAP::Harness::Archive TAP::Parser::SourceHandler::pgTAP IPC::Run
 ```
  - загрузка исходных кодов:
 ```
