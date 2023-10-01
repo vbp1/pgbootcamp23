@@ -127,6 +127,9 @@ less ./src/test/recovery/tmp_check/log/regress_log*
 ```
 
 ## Дебаг и применение патчей
+Далее довольно искусственный и элементарный пример (но у него есть большое достоинство - он крайне простой!). 
+Тот кому хочется творчества может попробовать затащить функциональность `On client login event trigger` (патч https://commitfest.postgresql.org/44/2900/) в PG15.
+
  - провоцируем stack overflow, исследуем coredump
 ```
 (n=1000000; printf "BEGIN;"; for ((i=1;i<=$n;i++)); do printf "SAVEPOINT s$i;"; done;\
