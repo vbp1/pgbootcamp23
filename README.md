@@ -135,7 +135,7 @@ less ./src/test/recovery/tmp_check/log/regress_log*
 (n=1000000; printf "BEGIN;"; for ((i=1;i<=$n;i++)); do printf "SAVEPOINT s$i;"; done;\
 	printf "SELECT pg_log_backend_memory_contexts(pg_backend_pid())") | psql postgres > /dev/null
 
-gdb "$WORKSPACE_PATH/postgres_bin/bin/postgres" /var/crash/core-postgres-* --ex 'bt full' --batch | less
+gdb "$WORKSPACE_PATH/postgres_bin/bin/postgres" /var/crash/core-postgres-* --ex 'bt' --batch | less
 
 pg_ctl -D $PGDATA stop
 make distclean
